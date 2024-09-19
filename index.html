@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Attendance Tracker</title>
+  </head>
+  <body>
+    <h1>Attendance Tracker</h1>
+
+    <h2>Sign In</h2>
+    <form id="sign-in-form">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <button type="submit">Sign In</button>
+    </form>
+
+    <div id="sign-in-result"></div>
+
+    <h2>Attendance</h2>
+    <form id="attendance-form" enctype="multipart/form-data">
+        <label for="checkin">Check-in Time:</label>
+        <input type="text" id="checkin" name="checkin" required><br><br>
+
+        <label for="checkout">Check-out Time:</label>
+        <input type="text" id="checkout" name="checkout" required><br><br>
+
+        <label for="file">Upload Excel File:</label>
+        <input type="file" id="file" name="file" accept=".xlsx" required><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        const signInForm = document.getElementById('sign-in-form');
+        signInForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(signInForm);
+            const response = await fetch('/signin', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            document.getElementById('sign-in-result').innerText = result.message;
+        });
+
+        const attendanceForm = document.getElementById('attendance-form');
+        attendanceForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(attendanceForm);
+            const response = await fetch('/calculate', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            document.getElementById('result').innerText = JSON.stringify(result, null, 2);
+        });
+    </script>
+  </body>
+</html>
